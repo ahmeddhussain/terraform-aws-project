@@ -119,7 +119,7 @@ variable "db_username" {
 variable "db_password" {
   description = "Database master password."
   type        = string
-  default     = "ChangeMe123!"
+  default     = "admin"
 }
 
 variable "alert_email" {
@@ -130,7 +130,7 @@ variable "alert_email" {
 variable "allowed_ssh_cidr" {
   description = "CIDR block allowed to SSH into EC2 instances."
   type        = string
-  default     = "0.0.0.0/0"
+  default     = "0.0.0.0/0" #Make it your public IP address with /32 for security reasons.
 
   validation {
     condition     = can(cidrhost(var.allowed_ssh_cidr, 0))
