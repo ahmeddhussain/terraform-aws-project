@@ -12,3 +12,4 @@ max_size              = 3
 environment           = "dev"
 bucket_name           = "ahmed-s3-upload-notify-dev-261120"
 email_address         = "ahmedkhater2611@gmail.com"
+alert_email           = "ahmedkhater2611@gmail.com"
