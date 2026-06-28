@@ -5,8 +5,7 @@
 .terraform.lock.hcl
 
 # Secrets and credentials
-*.tfvars
-!example.tfvars
+
 *.pem
 *.key
 .env

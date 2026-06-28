@@ -1,0 +1,14 @@
+vpc_cidr              = "172.16.0.0/24"
+public_subnet_1_cidr  = "172.16.1.0/24"
+public_subnet_2_cidr  = "172.16.2.0/24"
+private_subnet_1_cidr = "172.16.3.0/24"
+private_subnet_2_cidr = "172.16.4.0/24"
+instance_type         = "t3.micro"
+alb_name              = "prod-alb"
+alb_type              = "application"
+min_size              = 1
+desired_capacity      = 1
+max_size              = 4
+environment           = "prod"
+bucket_name           = "ahmed-s3-upload-notify-prod-261120"
+email_address         = "ahmedkhater2611@gmail.com"
