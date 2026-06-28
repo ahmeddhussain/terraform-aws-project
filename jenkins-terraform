@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    // This automatically adds Terraform to the PATH
+    tools {
+        terraform 'terraform' 
+    }
+
     parameters {
         choice(
             name: 'ENVIRONMENT',
@@ -9,35 +14,34 @@ pipeline {
         )
     }
 
-    environment {
-        AWS_CREDS = credentials('aws-credentials-id')
-        AWS_ACCESS_KEY_ID = "${env.AWS_CREDS_USR}"
-        AWS_SECRET_ACCESS_KEY = "${env.AWS_CREDS_PSW}"
-    }
-
     stages {
         stage('Terraform Init') {
             steps {
-                sh 'terraform init'
+                // withCredentials avoids the Groovy string interpolation warning
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials-id', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh 'terraform init'
+                }
             }
         }
 
         stage('Terraform Workspace') {
             steps {
-                // Tries to select the workspace. If it fails (doesn't exist), it creates it.
-                sh "terraform workspace select ${params.ENVIRONMENT} || terraform workspace new ${params.ENVIRONMENT}"
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials-id', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh "terraform workspace select ${params.ENVIRONMENT} || terraform workspace new ${params.ENVIRONMENT}"
+                }
             }
         }
 
         stage('Terraform Plan') {
             steps {
-                sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials-id', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
+                }
             }
         }
 
         stage('Approve Deployment') {
             steps {
-                // This pauses the pipeline and waits for manual user approval
                 input message: "Do you want to proceed to the next stage for ${params.ENVIRONMENT}?", ok: "Proceed"
             }
         }
