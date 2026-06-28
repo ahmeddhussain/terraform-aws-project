@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['dev', 'prod'],
+            description: 'Select the target environment'
+        )
+    }
+
+    environment {
+        AWS_CREDS = credentials('aws-credentials-id')
+        AWS_ACCESS_KEY_ID = "${env.AWS_CREDS_USR}"
+        AWS_SECRET_ACCESS_KEY = "${env.AWS_CREDS_PSW}"
+    }
+
+    stages {
+        stage('Terraform Init') {
+            steps {
+                sh 'terraform init'
+            }
+        }
+
+        stage('Terraform Workspace') {
+            steps {
+                // Tries to select the workspace. If it fails (doesn't exist), it creates it.
+                sh "terraform workspace select ${params.ENVIRONMENT} || terraform workspace new ${params.ENVIRONMENT}"
+            }
+        }
+
+        stage('Terraform Plan') {
+            steps {
+                sh "terraform plan -var-file=${params.ENVIRONMENT}.tfvars"
+            }
+        }
+
+        stage('Approve Deployment') {
+            steps {
+                // This pauses the pipeline and waits for manual user approval
+                input message: "Do you want to proceed to the next stage for ${params.ENVIRONMENT}?", ok: "Proceed"
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+        success {
+            echo 'Pipeline finished successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+        aborted {
+            echo 'Pipeline was aborted!'
+        }
+    }
+}

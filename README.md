@@ -1,6 +1,6 @@
 # 3-Tier AWS Web Application with Terraform
 
-This project provisions a production-style 3-tier AWS architecture using Terraform and a modular structure. It is designed to be clear, reusable, and strong
+This project provisions a production-style 3-tier AWS architecture using Terraform and a modular structure. It is designed to be clear, reusable, and strong.
 
 ## Architecture
 
