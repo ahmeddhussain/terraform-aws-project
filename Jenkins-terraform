@@ -45,6 +45,15 @@ pipeline {
                 input message: "Do you want to proceed to the next stage for ${params.ENVIRONMENT}?", ok: "Proceed"
             }
         }
+
+        stage('Terraform Apply') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'aws-credentials-id', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    // Uses -auto-approve to prevent the pipeline from hanging for user input
+                    sh "terraform apply -auto-approve -var-file=${params.ENVIRONMENT}.tfvars"
+                }
+            }
+        }
     }
 
     post {
@@ -56,9 +65,15 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed!'
+            mail to: 'ahmedkhater2611@gmail.com',
+                 subject: "Failed Pipeline: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}]",
+                 body: "The pipeline failed for environment: ${params.ENVIRONMENT}.\n\nView the build details here: ${env.BUILD_URL}"
         }
         aborted {
             echo 'Pipeline was aborted!'
+            mail to: 'ahmedkhater2611@gmail.com',
+                 subject: "Aborted Pipeline: ${env.JOB_NAME} [Build #${env.BUILD_NUMBER}]",
+                 body: "The pipeline was aborted for environment: ${params.ENVIRONMENT}.\n\nView the build details here: ${env.BUILD_URL}"
         }
     }
 }
