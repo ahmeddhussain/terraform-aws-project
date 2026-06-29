@@ -1,5 +1,4 @@
-day4/Flow and Archictecture.png
-
+![alt text](<Flow and Archictecture.png>)
 # 3-Tier AWS Web Application with Terraform & Jenkins CI/CD
 
 This project provisions a production-style 3-tier AWS architecture using Terraform and a modular structure with Jenkins CI/CD integration. It is designed to be clear, reusable, and suitable for a portfolio project.
