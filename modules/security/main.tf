@@ -34,12 +34,15 @@ resource "aws_security_group" "frontend_ec2_sg" {
     security_groups = [aws_security_group.frontend_alb_sg.id]
   }
 
-  ingress {
-    description = "Allow SSH from a restricted CIDR block."
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.allowed_ssh_cidr]
+  dynamic "ingress" {
+    for_each = length(trimspace(var.allowed_ssh_cidr)) > 0 ? [1] : []
+    content {
+      description = "Allow SSH from a restricted CIDR block."
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = [var.allowed_ssh_cidr]
+    }
   }
 
   egress {
@@ -92,12 +95,15 @@ resource "aws_security_group" "backend_ec2_sg" {
     security_groups = [aws_security_group.backend_alb_sg.id]
   }
 
-  ingress {
-    description = "Allow SSH from a restricted CIDR block."
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.allowed_ssh_cidr]
+  dynamic "ingress" {
+    for_each = length(trimspace(var.allowed_ssh_cidr)) > 0 ? [1] : []
+    content {
+      description = "Allow SSH from a restricted CIDR block."
+      from_port   = 22
+      to_port     = 22
+      protocol    = "tcp"
+      cidr_blocks = [var.allowed_ssh_cidr]
+    }
   }
 
   egress {

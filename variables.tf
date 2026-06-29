@@ -119,7 +119,7 @@ variable "db_username" {
 variable "db_password" {
   description = "Database master password."
   type        = string
-  default     = "admin"
+  sensitive   = true
 }
 
 variable "alert_email" {

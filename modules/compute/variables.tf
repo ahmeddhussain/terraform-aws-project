@@ -73,6 +73,22 @@ variable "max_size" {
   type        = number
 }
 
+variable "db_endpoint" {
+  description = "RDS endpoint for the backend application."
+  type        = string
+}
+
+variable "db_username" {
+  description = "Database username for the backend application."
+  type        = string
+}
+
+variable "db_password" {
+  description = "Database password for the backend application."
+  type        = string
+  sensitive   = true
+}
+
 variable "environment" {
   description = "Deployment environment for resource tagging."
   type        = string

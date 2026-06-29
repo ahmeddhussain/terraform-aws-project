@@ -23,6 +23,16 @@ output "backend_alb_dns_name" {
   value       = module.compute.backend_alb_dns_name
 }
 
+output "frontend_asg_name" {
+  description = "Name of the frontend Auto Scaling group."
+  value       = module.compute.frontend_asg_name
+}
+
+output "backend_asg_name" {
+  description = "Name of the backend Auto Scaling group."
+  value       = module.compute.backend_asg_name
+}
+
 output "db_instance_endpoint" {
   description = "RDS instance endpoint."
   value       = module.database.db_instance_endpoint

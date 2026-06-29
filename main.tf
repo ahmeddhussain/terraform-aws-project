@@ -40,6 +40,9 @@ module "compute" {
   min_size              = var.min_size
   desired_capacity      = var.desired_capacity
   max_size              = var.max_size
+  db_endpoint           = module.database.db_instance_endpoint
+  db_username           = var.db_username
+  db_password           = var.db_password
   environment           = var.environment
 }
 
